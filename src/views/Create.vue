@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col s6 offset-s3">
-      <h2>добавить задачу</h2>
+      <h2>Добавить задачу</h2>
       <form @submit.prevent="submitHandler">
         <div class="input-field ">
           <input
@@ -24,6 +24,7 @@
             v-model="description"
             id="description"
             class="materialize-textarea"
+            maxlength="2048"
           ></textarea>
           <label for="description">Описание</label>
           <span class="character-counter" style="float: right; font-size: 12px;"
@@ -31,7 +32,7 @@
           >
         </div>
         <input type="text" ref="datepicker" />
-        <button class="btn" type="submit">добавить</button>
+        <button class="btn blue darken-2" type="submit">добавить</button>
       </form>
     </div>
   </div>
@@ -59,6 +60,9 @@ export default {
       defaultDate: new Date(),
       setDefaultDate: true
     });
+    setTimeout(function() {
+      M.updateTextFields();
+    }, 0);
   },
   methods: {
     submitHandler() {
@@ -66,11 +70,13 @@ export default {
         title: this.title,
         description: this.description,
         id: Date.now(),
-        status: "active",
+        status: "активна",
         tags: this.chips.chipsData,
         date: this.date.date
       };
       console.log("task: ", task);
+      this.$store.dispatch("createTask", task);
+      this.$router.push("/list");
     }
   },
   destroyed() {
